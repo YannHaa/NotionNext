@@ -7,10 +7,12 @@ import { useGlobal } from '@/lib/global'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
+import { getProfileName } from '../lib/profile'
 
 export const BlogItem = props => {
   const { post } = props
-  const { NOTION_CONFIG } = useGlobal()
+  const { NOTION_CONFIG, siteInfo } = useGlobal()
+  const profileName = getProfileName(siteInfo)
   const showPageCover = siteConfig('SIMPLE_POST_COVER_ENABLE', false, CONFIG)
   const showPreview =
     siteConfig('POST_LIST_PREVIEW', false, NOTION_CONFIG) && post.blockMap
@@ -18,7 +20,8 @@ export const BlogItem = props => {
   return (
     <div
       key={post.id}
-      className='h-42 my-6 pb-12 border-b dark:border-gray-800'>
+      className='h-42 my-6 pb-12 border-b dark:border-gray-800'
+    >
       {/* 文章标题 */}
 
       <div className='flex'>
@@ -40,7 +43,8 @@ export const BlogItem = props => {
           <h2 className='mb-2'>
             <SmartLink
               href={post.href}
-              className='blog-item-title font-bold text-black text-2xl menu-link'>
+              className='blog-item-title font-bold text-black text-2xl menu-link'
+            >
               {siteConfig('POST_TITLE_ICON') && (
                 <NotionIcon icon={post.pageIcon} />
               )}
@@ -55,14 +59,16 @@ export const BlogItem = props => {
                 {' '}
                 <a
                   href={siteConfig('SIMPLE_AUTHOR_LINK', null, CONFIG)}
-                  className='p-1 hover:text-red-400 transition-all duration-200'>
-                  <i className='fa-regular fa-user'></i> {siteConfig('AUTHOR')}
+                  className='p-1 hover:text-red-400 transition-all duration-200'
+                >
+                  <i className='fa-regular fa-user'></i> {profileName}
                 </a>
               </span>
               <span>
                 <SmartLink
                   className='p-1 hover:text-red-400 transition-all duration-200'
-                  href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}>
+                  href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
+                >
                   <i className='fa-regular fa-clock' />{' '}
                   {post.date?.start_date || post.createdTime}
                 </SmartLink>
@@ -88,7 +94,8 @@ export const BlogItem = props => {
                   <SmartLink
                     key={t}
                     href={`/tag/${t}`}
-                    className=' hover:text-red-400 transition-all duration-200'>
+                    className=' hover:text-red-400 transition-all duration-200'
+                  >
                     <span> /{t}</span>
                   </SmartLink>
                 ))}
@@ -115,7 +122,8 @@ export const BlogItem = props => {
       <div className='block'>
         <SmartLink
           href={post.href}
-          className='inline-block rounded-sm text-blue-600 dark:text-blue-300  text-xs dark:border-gray-800 border hover:text-red-400 transition-all duration-200 hover:border-red-300 h-9 leading-8 px-5'>
+          className='inline-block rounded-sm text-blue-600 dark:text-blue-300  text-xs dark:border-gray-800 border hover:text-red-400 transition-all duration-200 hover:border-red-300 h-9 leading-8 px-5'
+        >
           Continue Reading{' '}
           <i className='fa-solid fa-angle-right align-middle'></i>
         </SmartLink>

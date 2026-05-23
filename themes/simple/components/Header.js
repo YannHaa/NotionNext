@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
 import SocialButton from './SocialButton'
+import { getProfileDescription, getProfileName } from '../lib/profile'
 
 /**
  * 网站顶部
@@ -10,6 +11,8 @@ import SocialButton from './SocialButton'
  */
 export default function Header(props) {
   const { siteInfo } = props
+  const profileName = getProfileName(siteInfo)
+  const profileDescription = getProfileDescription(siteInfo)
 
   return (
     <header className='text-center justify-between items-center px-6 bg-white h-80 dark:bg-black relative z-10'>
@@ -24,13 +27,13 @@ export default function Header(props) {
                 className='rounded-full'
                 width={100}
                 height={100}
-                alt={siteConfig('AUTHOR')}
+                alt={profileName}
               />
             </div>
 
             <div className='flex-col flex justify-center'>
               <div className='text-2xl font-serif dark:text-white py-2 hover:scale-105 transform duration-200'>
-                {siteConfig('AUTHOR')}
+                {profileName}
               </div>
               <div
                 className='font-light dark:text-white py-2 hover:scale-105 transform duration-200 text-center'
@@ -46,7 +49,7 @@ export default function Header(props) {
           <SocialButton />
         </div>
         <div className='text-xs mt-4 text-gray-500 dark:text-gray-300'>
-          {siteConfig('DESCRIPTION')}
+          {profileDescription}
         </div>
       </div>
     </header>

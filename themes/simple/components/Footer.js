@@ -1,6 +1,7 @@
 import { BeiAnGongAn } from '@/components/BeiAnGongAn'
 import DarkModeButton from '@/components/DarkModeButton'
 import { siteConfig } from '@/lib/config'
+import { getProfileName } from '../lib/profile'
 
 /**
  * 页脚
@@ -8,9 +9,11 @@ import { siteConfig } from '@/lib/config'
  * @returns
  */
 export default function Footer(props) {
+  const { siteInfo } = props
   const d = new Date()
   const currentYear = d.getFullYear()
   const since = siteConfig('SINCE')
+  const profileName = getProfileName(siteInfo)
   const copyrightDate =
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
 
@@ -20,8 +23,7 @@ export default function Footer(props) {
 
       <div className='text-yellow-300 container mx-auto max-w-4xl py-6 md:flex flex-wrap md:flex-no-wrap md:justify-between items-center text-sm'>
         <div className='text-center'>
-          &copy;{`${copyrightDate}`} {siteConfig('AUTHOR')}. All rights
-          reserved.
+          &copy;{`${copyrightDate}`} {profileName}. All rights reserved.
         </div>
         <div className='md:p-0 text-center md:text-right text-xs'>
           {/* 右侧链接 */}
@@ -29,7 +31,8 @@ export default function Footer(props) {
           {siteConfig('BEI_AN') && (
             <a
               href={siteConfig('BEI_AN_LINK')}
-              className='no-underline hover:underline ml-4'>
+              className='no-underline hover:underline ml-4'
+            >
               {siteConfig('BEI_AN')}
             </a>
           )}
@@ -38,7 +41,8 @@ export default function Footer(props) {
             Powered by
             <a
               href='https://github.com/tangly1024/NotionNext'
-              className=' hover:underline'>
+              className=' hover:underline'
+            >
               NotionNext {siteConfig('VERSION')}
             </a>
           </span>
