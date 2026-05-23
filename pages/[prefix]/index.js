@@ -10,7 +10,7 @@ import {
   getPasswordStoragePath,
   sha256Digest
 } from '@/lib/utils/password'
-import { checkSlugHasNoSlash } from '@/lib/utils/post'
+import { checkSlugHasNoSlash, normalizeInternalSlug } from '@/lib/utils/post'
 import { DynamicLayout } from '@/themes/theme'
 import md5 from 'js-md5'
 import { useRouter } from 'next/router'
@@ -127,14 +127,16 @@ export async function getStaticPaths() {
   return getStaticPathsBase({
     from: 'slug-paths',
     filterFn: row => checkSlugHasNoSlash(row),
-    mapPageToParams: row => ({ params: { prefix: row.slug } })
+    mapPageToParams: row => ({
+      params: { prefix: normalizeInternalSlug(row.slug) }
+    })
   })
 }
 
 export async function getStaticProps({ params: { prefix }, locale }) {
   const props = await resolvePostProps({
     prefix,
-    locale,
+    locale
   })
 
   return {
@@ -142,10 +144,10 @@ export async function getStaticProps({ params: { prefix }, locale }) {
     revalidate: isStaticExport
       ? undefined
       : siteConfig(
-        'NEXT_REVALIDATE_SECOND',
-        BLOG.NEXT_REVALIDATE_SECOND,
-        props.NOTION_CONFIG
-      ),
+          'NEXT_REVALIDATE_SECOND',
+          BLOG.NEXT_REVALIDATE_SECOND,
+          props.NOTION_CONFIG
+        ),
     notFound: !props.post
   }
 }

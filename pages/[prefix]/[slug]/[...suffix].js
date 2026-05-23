@@ -3,7 +3,10 @@ import { siteConfig } from '@/lib/config'
 import { resolvePostProps } from '@/lib/db/SiteDataApi'
 import { getStaticPathsBase } from '@/lib/build/staticPaths'
 import { isExport } from '@/lib/utils/buildMode'
-import { checkSlugHasMorThanTwoSlash } from '@/lib/utils/post'
+import {
+  checkSlugHasMorThanTwoSlash,
+  normalizeInternalSlug
+} from '@/lib/utils/post'
 import Slug from '..'
 
 const isStaticExport = process.env.EXPORT === 'true'
@@ -18,16 +21,15 @@ const PrefixSlug = props => {
   return <Slug {...props} />
 }
 
-
 export async function getStaticPaths() {
   return getStaticPathsBase({
     from: 'slug-paths',
     filterFn: row => checkSlugHasMorThanTwoSlash(row),
     mapPageToParams: row => ({
       params: {
-        prefix: row.slug.split('/')[0],
-        slug: row.slug.split('/')[1],
-        suffix: row.slug.split('/').slice(2)
+        prefix: normalizeInternalSlug(row.slug).split('/')[0],
+        slug: normalizeInternalSlug(row.slug).split('/')[1],
+        suffix: normalizeInternalSlug(row.slug).split('/').slice(2)
       }
     })
   })
@@ -42,12 +44,11 @@ export async function getStaticProps({
   params: { prefix, slug, suffix },
   locale
 }) {
-
   const props = await resolvePostProps({
     prefix,
     slug,
     suffix,
-    locale,
+    locale
   })
 
   return {
@@ -55,10 +56,10 @@ export async function getStaticProps({
     revalidate: isStaticExport
       ? undefined
       : siteConfig(
-        'NEXT_REVALIDATE_SECOND',
-        BLOG.NEXT_REVALIDATE_SECOND,
-        props.NOTION_CONFIG
-      ),
+          'NEXT_REVALIDATE_SECOND',
+          BLOG.NEXT_REVALIDATE_SECOND,
+          props.NOTION_CONFIG
+        ),
     notFound: !props.post
   }
 }
